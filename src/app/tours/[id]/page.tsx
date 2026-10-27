@@ -8,9 +8,9 @@ import BookingHoldSidebar from '@/components/tours/BookingHoldSidebar';
 import TourImageWithFallback from '@/components/ui/TourImageWithFallback';
 
 interface TourDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export function generateStaticParams() {
@@ -20,8 +20,9 @@ export function generateStaticParams() {
   }));
 }
 
-export function generateMetadata({ params }: TourDetailPageProps): Metadata {
-  const tour = getTourById(params.id);
+export async function generateMetadata({ params }: TourDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const tour = getTourById(id);
   if (!tour) {
     return {
       title: 'Tour Not Found | Sandhu Travels and Tour',
@@ -44,8 +45,9 @@ export function generateMetadata({ params }: TourDetailPageProps): Metadata {
   };
 }
 
-export default function TourDetailPage({ params }: TourDetailPageProps) {
-  const tour = getTourById(params.id);
+export default async function TourDetailPage({ params }: TourDetailPageProps) {
+  const { id } = await params;
+  const tour = getTourById(id);
   if (!tour) {
     notFound();
   }
